@@ -1,30 +1,27 @@
-from sentence_transformers import SentenceTransformer
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-model = SentenceTransformer(
-'all-MiniLM-L6-v2'
-)
+import re
 
 def calculate_similarity(
     resume_text,
     job_description
 ):
 
-    embeddings = model.encode([
-
-        resume_text,
-        job_description
-    ])
-
-    similarity = cosine_similarity(
-
-        [embeddings[0]],
-        [embeddings[1]]
-
-    )[0][0]
-
-    return round(
-        similarity * 100,
-        2
+    resume_words = set(
+        re.findall(r'\w+', resume_text.lower())
     )
+
+    job_words = set(
+        re.findall(r'\w+', job_description.lower())
+    )
+
+    if not job_words:
+        return 0
+
+    matched = len(
+        resume_words & job_words
+    )
+
+    similarity = (
+        matched / len(job_words)
+    ) * 100
+
+    return round(similarity, 2)
