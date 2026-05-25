@@ -1,38 +1,79 @@
 import re
 
+TECH_KEYWORDS = {
+
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "react",
+    "nextjs",
+    "nodejs",
+    "express",
+    "mongodb",
+    "mysql",
+    "postgresql",
+    "sql",
+    "html",
+    "html5",
+    "css",
+    "css3",
+    "tailwind",
+    "bootstrap",
+    "flask",
+    "django",
+    "api",
+    "rest",
+    "graphql",
+    "docker",
+    "kubernetes",
+    "aws",
+    "firebase",
+    "git",
+    "github",
+    "linux",
+    "pandas",
+    "numpy",
+    "tensorflow",
+    "opencv",
+    "machine",
+    "learning",
+    "ai",
+    "ml",
+    "data",
+    "analytics",
+    "powerbi",
+    "excel",
+    "c",
+    "cpp",
+    "c++",
+    "php",
+    "laravel",
+    "redux",
+    "vite",
+    "figma",
+    "ui",
+    "ux"
+
+}
+
 def extract_skills(text):
 
     text = text.lower()
 
-    # remove special characters
-    text = re.sub(r"[^a-zA-Z0-9+#.\s]", " ", text)
+    words = re.findall(
+        r"[a-zA-Z0-9+#.]+",
+        text
+    )
 
-    words = text.split()
+    found = set()
 
-    # common stopwords remove
-    stopwords = {
+    for word in words:
 
-        "the", "and", "with", "for",
-        "you", "your", "are", "have",
-        "this", "that", "from", "will",
-        "our", "job", "role", "team",
-        "developer", "experience",
-        "working", "skills", "knowledge"
+        clean_word = word.strip()
 
-    }
+        if clean_word in TECH_KEYWORDS:
 
-    filtered = [
+            found.add(clean_word)
 
-        word.strip()
-
-        for word in words
-
-        if len(word) > 2
-        and word not in stopwords
-
-    ]
-
-    # unique words
-    unique_skills = list(set(filtered))
-
-    return unique_skills[:80]
+    return list(found)
