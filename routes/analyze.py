@@ -89,11 +89,23 @@ def analyze_resume():
             ""
         )
 
+        # =========================
+        # COMBINE LINK + TEXT
+        # =========================
+
         if job_link:
 
-            job_desc = extract_job_text_from_link(
+            scraped_text = extract_job_text_from_link(
                 job_link
             )
+
+            job_desc = (
+                job_desc + " " + scraped_text
+            )
+
+        # =========================
+        # CHECK PDF
+        # =========================
 
         if not file:
 
@@ -102,6 +114,10 @@ def analyze_resume():
             }), 400
 
         text = ""
+
+        # =========================
+        # PDF TEXT EXTRACTION
+        # =========================
 
         try:
 
@@ -112,6 +128,7 @@ def analyze_resume():
                 extracted = page.extract_text()
 
                 if extracted:
+
                     text += extracted
 
         except Exception as pdf_err:
@@ -120,9 +137,9 @@ def analyze_resume():
                 "error": str(pdf_err)
             }), 400
 
-        # =====================
-        # SKILLS EXTRACTION
-        # =====================
+        # =========================
+        # SKILL EXTRACTION
+        # =========================
 
         raw_resume_skills = extract_skills(
             text
@@ -148,9 +165,9 @@ def analyze_resume():
 
         ]
 
-        # =====================
-        # AI TEXT MATCHING
-        # =====================
+        # =========================
+        # AI TEXT SIMILARITY
+        # =========================
 
         text_score = float(
 
@@ -161,9 +178,9 @@ def analyze_resume():
 
         )
 
-        # =====================
-        # SKILL MATCHING
-        # =====================
+        # =========================
+        # SKILL SCORE
+        # =========================
 
         skill_score = float(
 
@@ -174,9 +191,9 @@ def analyze_resume():
 
         )
 
-        # =====================
+        # =========================
         # FINAL ATS SCORE
-        # =====================
+        # =========================
 
         final_score = (
 
@@ -188,9 +205,9 @@ def analyze_resume():
 
         )
 
-        # =====================
+        # =========================
         # MISSING SKILLS
-        # =====================
+        # =========================
 
         missing_skills = list(
 
@@ -199,9 +216,9 @@ def analyze_resume():
 
         )
 
-        # =====================
+        # =========================
         # SAVE DATABASE
-        # =====================
+        # =========================
 
         try:
 
@@ -232,9 +249,9 @@ def analyze_resume():
 
             db.session.rollback()
 
-        # =====================
+        # =========================
         # RESPONSE
-        # =====================
+        # =========================
 
         return jsonify({
 
