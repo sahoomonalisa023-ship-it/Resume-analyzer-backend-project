@@ -1,47 +1,38 @@
 import re
 
-skills = [
-
-    "python",
-    "javascript",
-    "react",
-    "reactjs",
-    "react.js",
-    "nodejs",
-    "node.js",
-    "express",
-    "expressjs",
-    "mongodb",
-    "mongoose",
-    "sql",
-    "mysql",
-    "postgresql",
-    "html",
-    "css",
-    "tailwind",
-    "tailwind css",
-    "bootstrap",
-    "docker",
-    "flask",
-    "django",
-    "git",
-    "github",
-    "rest api",
-    "api",
-]
-
 def extract_skills(text):
 
     text = text.lower()
 
-    found_skills = set()
+    # remove special characters
+    text = re.sub(r"[^a-zA-Z0-9+#.\s]", " ", text)
 
-    for skill in skills:
+    words = text.split()
 
-        pattern = r'\b' + re.escape(skill) + r'\b'
+    # common stopwords remove
+    stopwords = {
 
-        if re.search(pattern, text):
+        "the", "and", "with", "for",
+        "you", "your", "are", "have",
+        "this", "that", "from", "will",
+        "our", "job", "role", "team",
+        "developer", "experience",
+        "working", "skills", "knowledge"
 
-            found_skills.add(skill)
+    }
 
-    return list(found_skills)
+    filtered = [
+
+        word.strip()
+
+        for word in words
+
+        if len(word) > 2
+        and word not in stopwords
+
+    ]
+
+    # unique words
+    unique_skills = list(set(filtered))
+
+    return unique_skills[:80]
