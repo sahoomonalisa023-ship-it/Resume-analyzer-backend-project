@@ -1,27 +1,19 @@
 import re
 
-def calculate_similarity(
-    resume_text,
-    job_description
-):
+def calculate_similarity(resume_text, job_description):
 
-    resume_words = set(
-        re.findall(r'\w+', resume_text.lower())
-    )
+    if not resume_text or not job_description:
+        return 0
 
-    job_words = set(
-        re.findall(r'\w+', job_description.lower())
-    )
+    resume_words = set(resume_text.lower().split())
+    job_words = set(job_description.lower().split())
+
+    resume_words = {w for w in resume_words if len(w) > 2}
+    job_words = {w for w in job_words if len(w) > 2}
 
     if not job_words:
         return 0
 
-    matched = len(
-        resume_words & job_words
-    )
+    matched = resume_words & job_words
 
-    similarity = (
-        matched / len(job_words)
-    ) * 100
-
-    return round(similarity, 2)
+    return round((len(matched) / len(job_words)) * 100, 2)
