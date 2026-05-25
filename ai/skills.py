@@ -1,59 +1,20 @@
 import re
+from collections import Counter
 
-TECH_KEYWORDS = {
+STOPWORDS = {
 
-    "python",
-    "java",
-    "javascript",
-    "typescript",
-    "react",
-    "nextjs",
-    "nodejs",
-    "express",
-    "mongodb",
-    "mysql",
-    "postgresql",
-    "sql",
-    "html",
-    "html5",
-    "css",
-    "css3",
-    "tailwind",
-    "bootstrap",
-    "flask",
-    "django",
-    "api",
-    "rest",
-    "graphql",
-    "docker",
-    "kubernetes",
-    "aws",
-    "firebase",
-    "git",
-    "github",
-    "linux",
-    "pandas",
-    "numpy",
-    "tensorflow",
-    "opencv",
-    "machine",
-    "learning",
-    "ai",
-    "ml",
-    "data",
-    "analytics",
-    "powerbi",
-    "excel",
-    "c",
-    "cpp",
-    "c++",
-    "php",
-    "laravel",
-    "redux",
-    "vite",
-    "figma",
-    "ui",
-    "ux"
+    "the", "and", "with", "for", "you",
+    "your", "are", "have", "this",
+    "that", "from", "will", "our",
+    "job", "role", "team", "skills",
+    "experience", "working", "good",
+    "ability", "knowledge", "using",
+    "worked", "project", "projects",
+    "developer", "application",
+    "applications", "responsible",
+    "developed", "build", "building",
+    "resume", "cv", "name",
+    "email", "phone", "address"
 
 }
 
@@ -62,18 +23,29 @@ def extract_skills(text):
     text = text.lower()
 
     words = re.findall(
-        r"[a-zA-Z0-9+#.]+",
+        r"\b[a-zA-Z][a-zA-Z0-9+#.-]{2,}\b",
         text
     )
 
-    found = set()
+    filtered = [
 
-    for word in words:
+        word.strip()
 
-        clean_word = word.strip()
+        for word in words
 
-        if clean_word in TECH_KEYWORDS:
+        if word not in STOPWORDS
+        and not word.isdigit()
 
-            found.add(clean_word)
+    ]
 
-    return list(found)
+    freq = Counter(filtered)
+
+    common_words = [
+
+        word
+
+        for word, count in freq.most_common(50)
+
+    ]
+
+    return common_words
